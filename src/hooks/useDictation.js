@@ -112,6 +112,9 @@ export function useDictation(text, wpm, language = "english") {
       };
 
       utterance.onerror = (e) => {
+        // Ignore expected interruption errors when we manually stop or change speed
+        if (e.error === "interrupted" || e.error === "canceled") return;
+
         console.error("SpeechSynthesis error:", e);
         setIsPlaying(false);
         isPlayingRef.current = false;
