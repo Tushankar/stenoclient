@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Brain, Settings, Loader2 } from "lucide-react";
+import { Brain, Settings, Loader2, Library } from "lucide-react";
 import api from "../services/api";
+import PassageBrowser from "../components/PassageBrowser";
 import { useTypingEngine } from "../hooks/useTypingEngine";
 import TypingBox from "../components/typing/TypingBox";
 import ResultsScreen from "../components/typing/ResultsScreen";
@@ -11,6 +12,7 @@ const AITraining = () => {
   const [loading, setLoading] = useState(true);
   const [passageText, setPassageText] = useState("");
   const [sessionSaved, setSessionSaved] = useState(null);
+  const [showBrowser, setShowBrowser] = useState(false);
 
   useEffect(() => {
     generateAIPassage();
@@ -95,6 +97,13 @@ const AITraining = () => {
     }
   };
 
+  const handleSelectPassage = (passage) => {
+    setPassageText(passage.content);
+    reset();
+    setShowBrowser(false);
+    toast.success(`Selected: ${passage.title}`);
+  };
+
   if (sessionSaved) return <ResultsScreen session={sessionSaved} />;
 
   return (
@@ -125,6 +134,12 @@ const AITraining = () => {
                 </p>
               </div>
               <div className="flex gap-4 mt-6 md:mt-0">
+                <button
+                  onClick={() => setShowBrowser(true)}
+                  className="px-6 py-2 bg-[var(--color-surface-2)] text-[var(--color-text)] border border-[var(--color-border)] rounded-full text-sm font-bold shadow hover:bg-[var(--color-border)] transition flex items-center gap-2"
+                >
+                  <Library size={16} /> Browse
+                </button>
                 <Link
                   to="/training"
                   className="px-6 py-2 bg-[var(--color-surface-2)] text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-full text-sm font-bold shadow hover:text-white transition"
@@ -164,6 +179,14 @@ const AITraining = () => {
             </div>
           </div>
         </>
+      )}
+
+      {showBrowser && (
+        <PassageBrowser
+          onSelectPassage={handleSelectPassage}
+          onClose={() => setShowBrowser(false)}
+          mode="ai-training"
+        />
       )}
     </div>
   );

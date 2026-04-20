@@ -2,15 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useTypingEngine } from "../hooks/useTypingEngine";
 import TypingBox from "../components/typing/TypingBox";
 import ResultsScreen from "../components/typing/ResultsScreen";
+import PassageBrowser from "../components/PassageBrowser";
 import api from "../services/api";
 import toast from "react-hot-toast";
-import { Sparkles, RefreshCcw, BookOpen, Settings2 } from "lucide-react";
+import {
+  Sparkles,
+  RefreshCcw,
+  BookOpen,
+  Settings2,
+  RotateCw,
+  Library,
+} from "lucide-react";
 
 const TypingTest = () => {
   const [passage, setPassage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sessionSaved, setSessionSaved] = useState(null);
   const [isAiMode, setIsAiMode] = useState(false);
+  const [showBrowser, setShowBrowser] = useState(false);
   const [aiOptions, setAiOptions] = useState({
     topics: "",
     level: "intermediate",
@@ -106,6 +115,19 @@ const TypingTest = () => {
     fetchRandomPassage();
   };
 
+  const handleChangePassage = async () => {
+    reset();
+    await fetchRandomPassage();
+    toast.success("New passage loaded!");
+  };
+
+  const handleSelectFromBrowser = (selectedPassage) => {
+    setPassage(selectedPassage);
+    reset();
+    setShowBrowser(false);
+    toast.success(`Loaded: ${selectedPassage.title}`);
+  };
+
   if (loading && !passage) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center text-2xl animate-pulse text-[var(--color-primary-light)]">
@@ -120,13 +142,36 @@ const TypingTest = () => {
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center py-10 px-4">
-      <div className="w-full max-w-4xl text-center mb-10">
-        <h2 className="text-4xl font-black text-[var(--color-primary-light)] mb-3 tracking-tight">
-          Practice Typing
-        </h2>
-        <p className="text-[var(--color-text-muted)] text-lg">
-          Master your steno speed with curated or AI-powered passages.
-        </p>
+      <div className="w-full max-w-4xl mb-10">
+        <div className="flex justify-between items-start mb-6">
+          <div className="flex-1">
+            <h2 className="text-4xl font-black text-[var(--color-primary-light)] mb-3 tracking-tight">
+              Practice Typing
+            </h2>
+            <p className="text-[var(--color-text-muted)] text-lg">
+              Master your steno speed with curated or AI-powered passages.
+            </p>
+          </div>
+          <div className="ml-4 flex gap-2">
+            <button
+              onClick={() => setShowBrowser(true)}
+              title="Browse and select passages"
+              className="flex items-center gap-2 bg-[var(--color-surface-2)] px-4 py-2 rounded-lg text-sm border border-[var(--color-border)] hover:bg-[var(--color-border)] transition whitespace-nowrap"
+            >
+              <Library size={16} /> Browse
+            </button>
+            {!isAiMode && (
+              <button
+                onClick={handleChangePassage}
+                disabled={isStarted || loading}
+                title="Load a new passage"
+                className="flex items-center gap-2 bg-[var(--color-surface-2)] px-4 py-2 rounded-lg text-sm border border-[var(--color-border)] hover:bg-[var(--color-border)] transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                <RotateCw size={16} /> Change
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="w-full max-w-4xl mb-8">
@@ -185,7 +230,8 @@ const TypingTest = () => {
               >
                 {generating ? (
                   <>
-                    <RefreshCcw className="animate-spin" size={20} /> Thinking...
+                    <RefreshCcw className="animate-spin" size={20} />{" "}
+                    Thinking...
                   </>
                 ) : (
                   <>
@@ -194,10 +240,12 @@ const TypingTest = () => {
                 )}
               </button>
             </div>
-            
+
             <div className="mt-4 flex flex-wrap gap-2 items-center">
-              <span className="text-[var(--color-text-muted)] text-xs font-bold uppercase mr-2">Quick topics:</span>
-              {["Legal", "Politics", "Science", "History"].map(t => (
+              <span className="text-[var(--color-text-muted)] text-xs font-bold uppercase mr-2">
+                Quick topics:
+              </span>
+              {["Legal", "Politics", "Science", "History"].map((t) => (
                 <button
                   key={t}
                   onClick={() => generateAiPassage(t)}
@@ -230,18 +278,23 @@ const TypingTest = () => {
             </span>
           </div>
         )}
-        
+
         {generating && (
           <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface)]/60 backdrop-blur-[4px] z-20 rounded-2xl">
-             <div className="flex flex-col items-center gap-4">
-                <RefreshCcw size={48} className="animate-spin text-[var(--color-accent)]" />
-                <span className="text-xl font-bold text-white">AI is crafting your passage...</span>
-             </div>
+            <div className="flex flex-col items-center gap-4">
+              <RefreshCcw
+                size={48}
+                className="animate-spin text-[var(--color-accent)]"
+              />
+              <span className="text-xl font-bold text-white">
+                AI is crafting your passage...
+              </span>
+            </div>
           </div>
         )}
       </div>
 
-      <div className="mt-10 flex gap-4">
+      <div className="mt-10 flex gap-4 flex-wrap justify-center">
         {!isAiMode && (
           <button
             onClick={handleRestart}
@@ -250,7 +303,21 @@ const TypingTest = () => {
             <RefreshCcw size={18} /> New Static Passage
           </button>
         )}
+        <button
+          onClick={() => reset()}
+          className="flex items-center gap-2 bg-[var(--color-surface-2)] text-[var(--color-text)] px-8 py-3 rounded-xl font-bold hover:bg-[var(--color-border)] transition border border-[var(--color-border)] shadow-xl"
+        >
+          <RotateCw size={18} /> Restart Current
+        </button>
       </div>
+
+      {showBrowser && (
+        <PassageBrowser
+          onSelectPassage={handleSelectFromBrowser}
+          onClose={() => setShowBrowser(false)}
+          mode="typing"
+        />
+      )}
     </div>
   );
 };
