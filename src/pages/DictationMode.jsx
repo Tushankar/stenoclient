@@ -124,7 +124,13 @@ const DictationMode = () => {
       });
 
       if (res.data.success && res.data.text) {
-        setPassage(res.data.text);
+        const newPassage = res.data.text;
+        setPassage(newPassage);
+
+        // Inject the newly generated AI passage directly into our local playlist!
+        setPassagesList((prev) => [newPassage, ...prev]);
+        setPassageIndex(0);
+
         reset();
         stop();
         setHideText(difficulty === "hard");

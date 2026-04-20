@@ -89,8 +89,13 @@ const TypingTest = () => {
         wordCount: 150,
       });
       if (res.data.success && res.data.passage) {
-        setPassage(res.data.passage);
-        setPassagesList([]); // Empty list since we are custom generating
+        const newPassage = res.data.passage;
+        setPassage(newPassage);
+
+        // Inject the newly generated AI passage directly into our local playlist!
+        setPassagesList((prev) => [newPassage, ...prev]);
+        setPassageIndex(0);
+
         reset();
         toast.success("AI generated a unique passage for you!");
       }
