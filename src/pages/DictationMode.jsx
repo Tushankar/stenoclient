@@ -56,6 +56,8 @@ const DictationMode = () => {
     reset,
     keystrokeData,
     elapsedSeconds,
+    allowBackspace,
+    toggleBackspace,
   } = useTypingEngine(targetText);
 
   const prevSpeedRef = React.useRef(wpmSpeed);

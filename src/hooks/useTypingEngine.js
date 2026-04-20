@@ -8,6 +8,9 @@ export function useTypingEngine(targetText) {
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [backspaceMode, setBackspaceMode] = useState(() => {
+    return localStorage.getItem("backspaceMode") || "word";
+  });
   const keystrokeData = useRef([]);
   const lastKeystrokeTime = useRef(null);
 
@@ -27,7 +30,11 @@ export function useTypingEngine(targetText) {
       lastKeystrokeTime.current = now;
 
       if (key === "Backspace") {
-        // Feature: Block going back on mistakes. Ignore Backspace entirely.
+        if (backspaceMode === "off") return;
+        if (backspaceMode === "word" && typedText[currentIndex - 1] === " ") return;
+        
+        setTypedText((prev) => prev.slice(0, -1));
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
         return;
       }
 
@@ -62,8 +69,21 @@ export function useTypingEngine(targetText) {
 
       if (newTyped.length >= targetText.length) setIsFinished(true);
     },
-    [typedText, currentIndex, isStarted, isFinished, startTime, targetText],
+    [
+      typedText,
+      currentIndex,
+      isStarted,
+      isFinished,
+      startTime,
+      targetText,
+      backspaceMode,
+    ],
   );
+
+  const toggleBackspace = useCallback((val) => {
+    setBackspaceMode(val);
+    localStorage.setItem("backspaceMode", val);
+  }, []);
 
   const reset = useCallback(() => {
     setTypedText("");
@@ -100,6 +120,8 @@ export function useTypingEngine(targetText) {
     isFinished,
     charStates,
     keystrokeData: keystrokeData.current,
+    allowBackspace,
+    toggleBackspace,
     handleKeyPress,
     reset,
     elapsedSeconds: startTime ? Math.round((Date.now() - startTime) / 1000) : 0,

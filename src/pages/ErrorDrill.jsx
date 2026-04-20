@@ -65,6 +65,8 @@ const ErrorDrill = () => {
     wpm,
     elapsedSeconds,
     reset,
+    allowBackspace,
+    toggleBackspace,
   } = useTypingEngine(drillText);
 
   if (loading) {
@@ -119,6 +121,8 @@ const ErrorDrill = () => {
           wpm={wpm}
           accuracy={accuracy}
           elapsedTime={elapsedSeconds}
+          allowBackspace={allowBackspace}
+          toggleBackspace={toggleBackspace}
         />
 
         {!isStarted && !isFinished && (

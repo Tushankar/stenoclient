@@ -44,6 +44,8 @@ const TypingTest = () => {
     handleKeyPress,
     reset,
     elapsedSeconds,
+    allowBackspace,
+    toggleBackspace,
   } = useTypingEngine(targetText);
 
   useEffect(() => {
@@ -296,14 +298,8 @@ const TypingTest = () => {
           wpm={wpm}
           accuracy={accuracy}
           elapsedTime={elapsedSeconds}
-        />
-
-        {!isStarted && !generating && (
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
-            <span className="text-xl font-black bg-[var(--color-surface)] px-10 py-3 border-2 border-[var(--color-primary)] rounded-full text-[var(--color-primary-light)] shadow-2xl animate-bounce">
-              Start typing to begin
-            </span>
-          </div>
+            allowBackspace={allowBackspace}
+            toggleBackspace={toggleBackspace}
         )}
 
         {generating && (

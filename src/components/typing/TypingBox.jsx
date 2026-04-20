@@ -8,6 +8,8 @@ const TypingBox = ({
   wpm,
   accuracy,
   elapsedTime,
+  allowBackspace,
+  toggleBackspace,
 }) => {
   const boxRef = useRef(null);
 
@@ -36,6 +38,19 @@ const TypingBox = ({
           >
             🎯 {accuracy}%
           </div>
+          {typeof allowBackspace === "boolean" && (
+            <label className="flex items-center justify-center gap-2 px-3 py-1 ml-4 bg-[var(--color-bg)] rounded text-sm font-bold text-[var(--color-text-muted)] cursor-pointer border border-[var(--color-border)] hover:border-[var(--color-primary-light)] transition group shrink-0">
+              <input
+                type="checkbox"
+                checked={allowBackspace}
+                onChange={(e) => toggleBackspace(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-500 text-indigo-600 focus:ring-indigo-600 focus:ring-offset-0 bg-[var(--color-surface)] cursor-pointer"
+              />
+              <span className="group-hover:text-white transition">
+                Allow Backspace
+              </span>
+            </label>
+          )}
         </div>
         <div className="px-4 py-1 rounded-lg bg-[var(--color-primary)] font-bold text-lg text-white flex items-center shadow shadow-[var(--color-primary-dark)]">
           🚀 {wpm} WPM
