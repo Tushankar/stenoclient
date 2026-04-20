@@ -59,7 +59,8 @@ const TypingTest = () => {
   const fetchRandomPassage = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/texts?difficulty=beginner&limit=50");
+      // Fetch all passages regardless of difficulty to pull from the entire user library
+      const res = await api.get("/texts?limit=1000");
       if (res.data.success && res.data.texts && res.data.texts.length > 0) {
         const shuffled = res.data.texts.sort(() => 0.5 - Math.random());
         setPassagesList(shuffled);

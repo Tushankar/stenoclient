@@ -68,16 +68,8 @@ const DictationMode = () => {
   const fetchRandomPassage = async () => {
     setLoading(true);
     try {
-      const difficultyMap = {
-        easy: "beginner",
-        medium: "intermediate",
-        hard: "advanced",
-      };
-
-      // Fetch all passages for this difficulty so we can cycle them locally
-      const res = await api.get(
-        `/texts?examType=SSC&difficulty=${difficultyMap[difficulty]}&limit=50`,
-      );
+      // Fetch all user passages blindly so they can practice ANY passage on the chosen difficulty (which changes WPM/Visibility)
+      const res = await api.get(`/texts?limit=1000`);
 
       if (res.data.success && res.data.texts && res.data.texts.length > 0) {
         // Shuffle passages on load so it's different each session
