@@ -22,7 +22,7 @@ const difficulties = ["easy", "medium", "hard"];
 
 const DictationMode = () => {
   const [passage, setPassage] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [wpmSpeed, setWpmSpeed] = useState(100);
   const [hideText, setHideText] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(null);
