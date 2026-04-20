@@ -72,8 +72,12 @@ const DictationMode = () => {
       const res = await api.get(`/texts?limit=1000`);
 
       if (res.data.success && res.data.texts && res.data.texts.length > 0) {
-        // Shuffle passages on load so it's different each session
-        const shuffled = res.data.texts.sort(() => 0.5 - Math.random());
+        // Robust Fisher-Yates array shuffle for a truly randomized playlist every session
+        const shuffled = [...res.data.texts];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
         setPassagesList(shuffled);
         setPassage(shuffled[0]);
         setPassageIndex(0);
