@@ -56,11 +56,11 @@ const DictationMode = () => {
   } = useTypingEngine(targetText);
 
   useEffect(() => {
-    if (!showDifficultySelector && difficulty) {
+    if (!showDifficultySelector && difficulty && !passage) {
       fetchRandomPassage();
     }
     return () => stop(); // Stop audio on unmount
-  }, [stop, showDifficultySelector, difficulty]);
+  }, [stop, showDifficultySelector, difficulty, passage]);
 
   const fetchRandomPassage = async () => {
     setLoading(true);
@@ -268,9 +268,9 @@ const DictationMode = () => {
                     </>
                   ) : (
                     <>
-                      ✨ AI {diff === "easy" && "🟢"}
-                      {diff === "medium" && "🟡"}
-                      {diff === "hard" && "🔴"}
+                      ✨ AI {diff === "easy" && "🟢 Easy"}
+                      {diff === "medium" && "🟡 Medium"}
+                      {diff === "hard" && "🔴 Hard"}
                     </>
                   )}
                 </button>
@@ -480,6 +480,7 @@ const DictationMode = () => {
           <button
             onClick={() => {
               setShowDifficultySelector(true);
+              setPassage(null);
               stop();
               reset();
             }}

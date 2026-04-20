@@ -87,6 +87,10 @@ export function useTypingEngine(targetText) {
     return "pending";
   });
 
+  useEffect(() => {
+    reset();
+  }, [targetText, reset]);
+
   return {
     typedText,
     wpm,
