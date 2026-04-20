@@ -56,8 +56,8 @@ const DictationMode = () => {
     reset,
     keystrokeData,
     elapsedSeconds,
-    allowBackspace,
-    toggleBackspace,
+    backspaceMode,
+    setBackspaceMode,
   } = useTypingEngine(targetText);
 
   const prevSpeedRef = React.useRef(wpmSpeed);
@@ -504,15 +504,26 @@ const DictationMode = () => {
         </div>
 
         <div className="flex justify-between mt-6 gap-4">
-          <button
-            onClick={() => {
-              stop();
-              reset();
-            }}
-            className="px-6 py-2 rounded-lg text-sm font-bold text-[var(--color-text-muted)] hover:text-white border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] transition"
-          >
-            Start Over
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={() => {
+                stop();
+                reset();
+              }}
+              className="px-6 py-2 rounded-lg text-sm font-bold text-[var(--color-text-muted)] hover:text-white border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] transition"
+            >
+              Start Over
+            </button>
+            <select
+              value={backspaceMode}
+              onChange={(e) => setBackspaceMode(e.target.value)}
+              className="px-4 py-2 bg-[var(--color-bg)] rounded-lg text-sm font-bold text-[var(--color-text-muted)] cursor-pointer border border-[var(--color-border)] hover:border-[var(--color-primary-light)] transition focus:outline-none"
+            >
+              <option value="word">Backspace: Word</option>
+              <option value="off">Backspace: Off</option>
+              <option value="all">Backspace: All</option>
+            </select>
+          </div>
           <button
             onClick={() => {
               setShowDifficultySelector(true);

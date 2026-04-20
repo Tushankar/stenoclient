@@ -44,8 +44,8 @@ const TypingTest = () => {
     handleKeyPress,
     reset,
     elapsedSeconds,
-    allowBackspace,
-    toggleBackspace,
+    backspaceMode,
+    setBackspaceMode,
   } = useTypingEngine(targetText);
 
   useEffect(() => {
@@ -298,8 +298,8 @@ const TypingTest = () => {
           wpm={wpm}
           accuracy={accuracy}
           elapsedTime={elapsedSeconds}
-            allowBackspace={allowBackspace}
-            toggleBackspace={toggleBackspace}
+          backspaceMode={backspaceMode}
+          setBackspaceMode={setBackspaceMode}
         )}
 
         {generating && (

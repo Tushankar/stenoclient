@@ -8,8 +8,8 @@ const TypingBox = ({
   wpm,
   accuracy,
   elapsedTime,
-  allowBackspace,
-  toggleBackspace,
+  backspaceMode,
+  setBackspaceMode,
 }) => {
   const boxRef = useRef(null);
 
@@ -25,6 +25,17 @@ const TypingBox = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyPress]);
 
+  // Auto-scroll cursor into view when tying long passages
+  useEffect(() => {
+    if (boxRef.current && isStarted) {
+      const cursorElem = boxRef.current.querySelector(".typing-cursor");
+      if (cursorElem) {
+        // Using "center" to keep a good amount of context above and below the cursor
+        cursorElem.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [charStates, isStarted]);
+
   return (
     <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl bg-[var(--color-surface)] border border-[var(--color-border)]">
       {/* Top Bar / Stats */}
@@ -38,18 +49,16 @@ const TypingBox = ({
           >
             🎯 {accuracy}%
           </div>
-          {typeof allowBackspace === "boolean" && (
-            <label className="flex items-center justify-center gap-2 px-3 py-1 ml-4 bg-[var(--color-bg)] rounded text-sm font-bold text-[var(--color-text-muted)] cursor-pointer border border-[var(--color-border)] hover:border-[var(--color-primary-light)] transition group shrink-0">
-              <input
-                type="checkbox"
-                checked={allowBackspace}
-                onChange={(e) => toggleBackspace(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-500 text-indigo-600 focus:ring-indigo-600 focus:ring-offset-0 bg-[var(--color-surface)] cursor-pointer"
-              />
-              <span className="group-hover:text-white transition">
-                Allow Backspace
-              </span>
-            </label>
+          {setBackspaceMode && (
+            <select
+              value={backspaceMode}
+              onChange={(e) => setBackspaceMode(e.target.value)}
+              className="ml-4 px-3 py-1 bg-[var(--color-bg)] rounded-lg text-sm font-bold text-[var(--color-text-muted)] cursor-pointer border border-[var(--color-border)] hover:border-[var(--color-primary-light)] transition focus:outline-none group shrink-0"
+            >
+              <option value="word">Backspace: Word Only</option>
+              <option value="off">Backspace: Off</option>
+              <option value="all">Backspace: Entire Passage</option>
+            </select>
           )}
         </div>
         <div className="px-4 py-1 rounded-lg bg-[var(--color-primary)] font-bold text-lg text-white flex items-center shadow shadow-[var(--color-primary-dark)]">
@@ -85,7 +94,8 @@ const TypingBox = ({
             colorClass =
               "text-[var(--color-error)] underline decoration-red-500/50 bg-red-500/10 rounded-sm";
           if (state === "cursor")
-            colorClass = "bg-[var(--color-primary)] text-white animate-pulse";
+            colorClass =
+              "bg-[var(--color-primary)] text-white animate-pulse typing-cursor";
 
           return (
             <span

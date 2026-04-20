@@ -68,8 +68,8 @@ const AITraining = () => {
     typedText,
     keystrokeData,
     reset,
-    allowBackspace,
-    toggleBackspace,
+    backspaceMode,
+    setBackspaceMode,
   } = useTypingEngine(passageText);
 
   useEffect(() => {
@@ -169,8 +169,8 @@ const AITraining = () => {
                 wpm={wpm}
                 accuracy={accuracy}
                 elapsedTime={elapsedSeconds}
-                allowBackspace={allowBackspace}
-                toggleBackspace={toggleBackspace}
+                backspaceMode={backspaceMode}
+                setBackspaceMode={setBackspaceMode}
               />
 
               {!isStarted && !isFinished && (
