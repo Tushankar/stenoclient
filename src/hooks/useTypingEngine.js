@@ -31,8 +31,9 @@ export function useTypingEngine(targetText) {
 
       if (key === "Backspace") {
         if (backspaceMode === "off") return;
-        if (backspaceMode === "word" && typedText[currentIndex - 1] === " ") return;
-        
+        if (backspaceMode === "word" && typedText[currentIndex - 1] === " ")
+          return;
+
         setTypedText((prev) => prev.slice(0, -1));
         setCurrentIndex((prev) => Math.max(0, prev - 1));
         return;
@@ -120,8 +121,8 @@ export function useTypingEngine(targetText) {
     isFinished,
     charStates,
     keystrokeData: keystrokeData.current,
-    allowBackspace,
-    toggleBackspace,
+    backspaceMode,
+    setBackspaceMode: toggleBackspace,
     handleKeyPress,
     reset,
     elapsedSeconds: startTime ? Math.round((Date.now() - startTime) / 1000) : 0,
