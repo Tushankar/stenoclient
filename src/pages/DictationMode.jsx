@@ -41,7 +41,7 @@ const DictationMode = () => {
     pause,
     stop,
     replay,
-  } = useDictation(targetText, wpmSpeed, passage?.language);
+  } = useDictation(targetText, wpmSpeed, passage?.language || "english");
 
   const {
     typedText,
