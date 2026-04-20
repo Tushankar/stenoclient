@@ -300,7 +300,7 @@ const TypingTest = () => {
           elapsedTime={elapsedSeconds}
           backspaceMode={backspaceMode}
           setBackspaceMode={setBackspaceMode}
-        )}
+        />
 
         {generating && (
           <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface)]/60 backdrop-blur-[4px] z-20 rounded-2xl">
