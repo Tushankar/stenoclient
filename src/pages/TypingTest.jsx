@@ -20,6 +20,10 @@ const TypingTest = () => {
   const [sessionSaved, setSessionSaved] = useState(null);
   const [isAiMode, setIsAiMode] = useState(false);
   const [showBrowser, setShowBrowser] = useState(false);
+  
+  const [passagesList, setPassagesList] = useState([]);
+  const [passageIndex, setPassageIndex] = useState(0);
+
   const [aiOptions, setAiOptions] = useState({
     topics: "",
     level: "intermediate",
@@ -55,12 +59,15 @@ const TypingTest = () => {
   const fetchRandomPassage = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/texts/random?difficulty=beginner");
-      if (res.data.success && res.data.text) {
-        setPassage(res.data.text);
+      const res = await api.get("/texts?difficulty=beginner&limit=50");
+      if (res.data.success && res.data.texts && res.data.texts.length > 0) {
+        const shuffled = res.data.texts.sort(() => 0.5 - Math.random());
+        setPassagesList(shuffled);
+        setPassage(shuffled[0]);
+        setPassageIndex(0);
       }
     } catch (err) {
-      toast.error("Failed to load text passage.");
+      toast.error("Failed to load text passages.");
     } finally {
       setLoading(false);
     }
@@ -77,6 +84,7 @@ const TypingTest = () => {
       });
       if (res.data.success && res.data.passage) {
         setPassage(res.data.passage);
+        setPassagesList([]); // Empty list since we are custom generating
         reset();
         toast.success("AI generated a unique passage for you!");
       }
@@ -117,12 +125,20 @@ const TypingTest = () => {
 
   const handleChangePassage = async () => {
     reset();
-    await fetchRandomPassage();
-    toast.success("New passage loaded!");
+    if (passagesList.length > 1) {
+      const nextIndex = (passageIndex + 1) % passagesList.length;
+      setPassageIndex(nextIndex);
+      setPassage(passagesList[nextIndex]);
+      toast.success("Swapped to next passage!");
+    } else {
+      await fetchRandomPassage();
+      toast.success("New passage loaded!");
+    }
   };
 
   const handleSelectFromBrowser = (selectedPassage) => {
     setPassage(selectedPassage);
+    setPassagesList([]); // Selected specifically, clear dynamic loop
     reset();
     setShowBrowser(false);
     toast.success(`Loaded: ${selectedPassage.title}`);

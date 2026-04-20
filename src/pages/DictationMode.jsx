@@ -31,6 +31,9 @@ const DictationMode = () => {
   const [aiGenerating, setAiGenerating] = useState(false);
   const [showBrowser, setShowBrowser] = useState(false);
 
+  const [passagesList, setPassagesList] = useState([]);
+  const [passageIndex, setPassageIndex] = useState(0);
+
   const targetText = passage?.content || "";
 
   const {
@@ -71,29 +74,46 @@ const DictationMode = () => {
         hard: "advanced",
       };
 
+      // Fetch all passages for this difficulty so we can cycle them locally
       const res = await api.get(
-        "/texts/random?examType=SSC&difficulty=" + difficultyMap[difficulty],
+        `/texts?examType=SSC&difficulty=${difficultyMap[difficulty]}&limit=50`,
       );
-      if (res.data.success && res.data.text) {
-        setPassage(res.data.text);
-        // Reset typing state for new passage
+      
+      if (res.data.success && res.data.texts && res.data.texts.length > 0) {
+        // Shuffle passages on load so it's different each session
+        const shuffled = res.data.texts.sort(() => 0.5 - Math.random());
+        setPassagesList(shuffled);
+        setPassage(shuffled[0]);
+        setPassageIndex(0);
+        
         reset();
         stop();
-        // Auto-hide text for hard difficulty
         setHideText(difficulty === "hard");
       } else {
         toast.error("No passages available for this difficulty.");
       }
     } catch (err) {
-      toast.error("Failed to load text passage.");
+      toast.error("Failed to load text passages.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleChangePassage = async () => {
-    await fetchRandomPassage();
-    toast.success("New passage loaded!");
+    if (passagesList.length > 1) {
+      // Cycle to the next passage locally instantly!
+      const nextIndex = (passageIndex + 1) % passagesList.length;
+      setPassageIndex(nextIndex);
+      setPassage(passagesList[nextIndex]);
+      reset();
+      stop();
+      setHideText(difficulty === "hard");
+      toast.success("Swapped to next passage!");
+    } else {
+      // If we don't have a list, fallback to refetching (like for AI or single passages)
+      await fetchRandomPassage();
+      toast.success("New passage loaded!");
+    }
   };
 
   const handleGenerateAIPassage = async () => {
