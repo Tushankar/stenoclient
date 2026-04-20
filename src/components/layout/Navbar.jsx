@@ -1,15 +1,15 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-import { 
-  LayoutDashboard, 
-  Keyboard, 
-  Headphones, 
-  Brain, 
-  Trophy, 
-  Shield, 
-  LogOut, 
-  LogIn, 
-  Play 
+import {
+  LayoutDashboard,
+  Keyboard,
+  Headphones,
+  Brain,
+  Trophy,
+  Shield,
+  LogOut,
+  LogIn,
+  Play,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -21,31 +21,33 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const navLinkClass = ({ isActive }) => 
+  const navLinkClass = ({ isActive }) =>
     `flex items-center gap-2 px-3 py-2 transition-all duration-300 border-b-2 rounded-t-md font-medium ${
-      isActive 
+      isActive
         ? "border-[var(--color-primary-light)] text-[var(--color-primary-light)] bg-[var(--color-primary)]/10 [text-shadow:0_0_12px_var(--color-primary-light)]"
         : "border-transparent text-[var(--color-text)] hover:text-[var(--color-primary-light)] hover:bg-[var(--color-surface-2)]"
     }`;
 
-  const navLinkClassSpecial = (colorTheme) => ({ isActive }) => {
-    let classes = "";
-    if (colorTheme === "indigo") {
-      classes = isActive
-        ? "border-indigo-400 text-indigo-400 bg-indigo-500/10 [text-shadow:0_0_12px_#818cf8]"
-        : "border-transparent text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10";
-    } else if (colorTheme === "yellow") {
-      classes = isActive
-        ? "border-yellow-400 text-yellow-400 bg-yellow-500/10 [text-shadow:0_0_12px_#facc15]"
-        : "border-transparent text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10";
-    } else if (colorTheme === "red") {
-      classes = isActive
-        ? "border-red-400 text-red-400 bg-red-500/10 [text-shadow:0_0_12px_#f87171]"
-        : "border-transparent text-red-400 hover:text-red-300 hover:bg-red-500/10";
-    }
+  const navLinkClassSpecial =
+    (colorTheme) =>
+    ({ isActive }) => {
+      let classes = "";
+      if (colorTheme === "indigo") {
+        classes = isActive
+          ? "border-indigo-400 text-indigo-400 bg-indigo-500/10 [text-shadow:0_0_12px_#818cf8]"
+          : "border-transparent text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10";
+      } else if (colorTheme === "yellow") {
+        classes = isActive
+          ? "border-yellow-400 text-yellow-400 bg-yellow-500/10 [text-shadow:0_0_12px_#facc15]"
+          : "border-transparent text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10";
+      } else if (colorTheme === "red") {
+        classes = isActive
+          ? "border-red-400 text-red-400 bg-red-500/10 [text-shadow:0_0_12px_#f87171]"
+          : "border-transparent text-red-400 hover:text-red-300 hover:bg-red-500/10";
+      }
 
-    return `flex items-center gap-2 px-3 py-2 transition-all duration-300 border-b-2 rounded-t-md font-medium ${classes}`;
-  };
+      return `flex items-center gap-2 px-3 py-2 transition-all duration-300 border-b-2 rounded-t-md font-medium ${classes}`;
+    };
 
   return (
     <nav className="bg-[var(--color-surface)] border-b border-[var(--color-border)] py-4 px-8 flex justify-between items-center">
@@ -75,7 +77,10 @@ const Navbar = () => {
               <Brain size={18} />
               Training Center
             </NavLink>
-            <NavLink to="/leaderboard" className={navLinkClassSpecial("yellow")}>
+            <NavLink
+              to="/leaderboard"
+              className={navLinkClassSpecial("yellow")}
+            >
               <Trophy size={18} />
               Leaderboard
             </NavLink>
