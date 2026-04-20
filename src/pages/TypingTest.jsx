@@ -20,7 +20,7 @@ const TypingTest = () => {
   const [sessionSaved, setSessionSaved] = useState(null);
   const [isAiMode, setIsAiMode] = useState(false);
   const [showBrowser, setShowBrowser] = useState(false);
-  
+
   const [passagesList, setPassagesList] = useState([]);
   const [passageIndex, setPassageIndex] = useState(0);
 
