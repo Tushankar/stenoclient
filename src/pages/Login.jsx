@@ -97,10 +97,10 @@ const Login = () => {
         </form>
 
 
-            <button className="w-full bg-transparent border border-[var(--color-border)] text-[var(--color-text)] font-semibold py-3 rounded-md hover:bg-[var(--color-surface-2)] transition-colors flex items-center justify-center gap-2">
-              Sign in with Google
-            </button>
-          </div>
+        <div className="mt-8 w-full">
+          <button className="w-full bg-transparent border border-[var(--color-border)] text-[var(--color-text)] font-semibold py-3 rounded-md hover:bg-[var(--color-surface-2)] transition-colors flex items-center justify-center gap-2">
+            Sign in with Google
+          </button>
         </div>
       </div>
     </div>
