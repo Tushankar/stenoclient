@@ -27,8 +27,7 @@ export function useTypingEngine(targetText) {
       lastKeystrokeTime.current = now;
 
       if (key === "Backspace") {
-        setTypedText((prev) => prev.slice(0, -1));
-        setCurrentIndex((prev) => Math.max(0, prev - 1));
+        // Feature: Block going back on mistakes. Ignore Backspace entirely.
         return;
       }
 
