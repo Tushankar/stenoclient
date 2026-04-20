@@ -45,7 +45,7 @@ const AITraining = () => {
       });
 
       if (res.data.success) {
-        setPassageText(res.data.passage);
+        setPassageText(res.data.passage?.content || res.data.passage);
       }
     } catch (err) {
       toast.error("AI Generation failed. Falling back to default text.");

@@ -79,7 +79,7 @@ export function useTypingEngine(targetText) {
   }, []);
 
   // Build character states for rendering
-  const charStates = (targetText || "").split("").map((char, i) => {
+  const charStates = (typeof targetText === "string" ? targetText : "").split("").map((char, i) => {
     if (i < typedText.length) {
       return typedText[i] === char ? "correct" : "incorrect";
     }
