@@ -79,13 +79,15 @@ export function useTypingEngine(targetText) {
   }, []);
 
   // Build character states for rendering
-  const charStates = (typeof targetText === "string" ? targetText : "").split("").map((char, i) => {
-    if (i < typedText.length) {
-      return typedText[i] === char ? "correct" : "incorrect";
-    }
-    if (i === typedText.length) return "cursor";
-    return "pending";
-  });
+  const charStates = (typeof targetText === "string" ? targetText : "")
+    .split("")
+    .map((char, i) => {
+      if (i < typedText.length) {
+        return typedText[i] === char ? "correct" : "incorrect";
+      }
+      if (i === typedText.length) return "cursor";
+      return "pending";
+    });
 
   useEffect(() => {
     reset();
