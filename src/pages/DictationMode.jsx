@@ -58,6 +58,18 @@ const DictationMode = () => {
     elapsedSeconds,
   } = useTypingEngine(targetText);
 
+  const prevSpeedRef = React.useRef(wpmSpeed);
+  useEffect(() => {
+    // If wpmSpeed changed and user is already active, instantly reset and replay
+    if (prevSpeedRef.current !== wpmSpeed) {
+      prevSpeedRef.current = wpmSpeed;
+      if (isPlaying || isStarted || isPaused) {
+        reset();
+        replay();
+      }
+    }
+  }, [wpmSpeed, isPlaying, isStarted, isPaused, reset, replay]);
+
   useEffect(() => {
     if (!showDifficultySelector && difficulty && !passage) {
       fetchRandomPassage();
