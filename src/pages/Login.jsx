@@ -26,22 +26,7 @@ const Login = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
-    setLoading(true);
-    try {
-      const res = await api.post("/auth/login", {
-        email: "demo@example.com",
-        password: "password123",
-      });
-      toast.success("Welcome back, Demo User!");
-      setAuth(res.data.user, res.data.token);
-      navigate("/dashboard");
-    } catch (err) {
-      toast.error("Demo account not found. Please try registering.");
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center p-4">
@@ -111,18 +96,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="mt-8 flex flex-col items-center">
-          <span className="text-[var(--color-text-muted)] text-xs mb-4">
-            — OR —
-          </span>
-          <div className="flex flex-col gap-3 w-full">
-            <button
-              onClick={handleDemoLogin}
-              disabled={loading}
-              className="w-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-white font-bold py-3 rounded-md hover:bg-[var(--color-border)] transition-all flex items-center justify-center gap-2 shadow-md"
-            >
-              🚀 Login with Demo Account
-            </button>
+
             <button className="w-full bg-transparent border border-[var(--color-border)] text-[var(--color-text)] font-semibold py-3 rounded-md hover:bg-[var(--color-surface-2)] transition-colors flex items-center justify-center gap-2">
               Sign in with Google
             </button>
